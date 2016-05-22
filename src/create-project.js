@@ -134,12 +134,12 @@ module.exports = function(projectName) {
 			`${tpDir}/.idea`,
 			`${tpDir}/.babelrc`,
 			`${tpDir}/.eslintrc`,
-			`${tpDir}/.gitignore`,
 			`${tpDir}/wallaby.js`,
 			`${tpDir}/tslint.json`,
 			`${tpDir}/typings`
 		],baseDir)
-		cp('-rf',`${tpDir}/src-template`,`${baseDir}/src`)
+		cp('-rf',`${tpDir}/template/*`,`${baseDir}/`)
+		mv(`${baseDir}/gitignore`,`${baseDir}/.gitignore`)
 
 		// Update the projects.json
 		const projectConfig = {
@@ -181,9 +181,10 @@ module.exports = function(projectName) {
 		cd(baseDir)
 		mv(`${baseDir}/.idea/typeproject.iml`,`${baseDir}/.idea/${name}.iml`)
 		sed('-i','typeproject',name,`${baseDir}/.idea/modules.xml`)
-		rm(`${baseDir}/.idea/workspace.xml`)
+		//rm(`${baseDir}/.idea/workspace.xml`)
 		exec('git init')
 		exec('npm install')
+		exec('npm test')
 
 
 	}
