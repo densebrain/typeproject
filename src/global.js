@@ -18,32 +18,14 @@ const logger = new (winston.Logger)({
 logger.cli()
 
 const
-	gulp = require('gulp'),
-	gutil = require('gulp-util'),
-	del = require('del'),
-	git = require('gulp-git'),
-	ts = require('gulp-typescript'),
 	glob = require('glob'),
-	merge = require('merge2'),
-	babel = require('gulp-babel'),
-	mocha = require('gulp-mocha'),
-	sourceMaps = require('gulp-sourcemaps'),
 	helpers = require('./helpers'),
 	fs = require('fs')
 
 
 Object.assign(global,{
 	log: logger,
-	gulp,
-	gutil,
-	del,
-	git,
-	ts,
 	glob,
-	merge,
-	babel,
-	mocha,
-	sourceMaps,
 	fs,
 	path,
 

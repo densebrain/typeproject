@@ -1,15 +1,31 @@
 {
   "name": "typeproject",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "A tool for creating typescript projects/modules/packages with ease and without focusing on configuration",
   "main": "src/cli.js",
   "scripts": {
     "test": "gulp test"
   },
+  "files": [
+    ".gitignore",
+    ".babelrc",
+    ".idea",
+    "bin",
+    "src",
+    "README.md",
+    "gulpfile.babel.js",
+    "src-template",
+    "package.json",
+    "tsconfig.json",
+    "typings",
+    "typings.json",
+    "wallaby.js",
+    ".eslintrc",
+    "tslint.json"
+  ],
   "preferGlobal": true,
   "bin": {
-    "tp": "./bin/tp.js",
-    "typeproject": "./bin/typeproject.js"
+    "tp": "bin/tp.js"
   },
   "repository": {
     "type": "git",
@@ -35,10 +51,17 @@
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-stage-0": "^6.5.0",
     "babel-register": "^6.9.0",
-    "chai": "^3.5.0",
     "commander": "^2.9.0",
-    "del": "^2.2.0",
     "glob": "^7.0.3",
+    "inquirer": "^1.0.2",
+    "shelljs": "^0.7.0",
+    "sinon": "^1.17.4",
+    "source-map-support": "^0.4.0",
+    "winston": "^2.2.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "del": "^2.2.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-debug": "^2.1.2",
@@ -47,16 +70,10 @@
     "gulp-sourcemaps": "^1.6.0",
     "gulp-typescript": "^2.13.4",
     "gulp-util": "^3.0.7",
-    "inquirer": "^1.0.2",
     "merge2": "^1.0.2",
     "mocha": "^2.4.5",
     "mocha-junit-reporter": "^1.11.1",
     "run-sequence": "^1.2.0",
-    "semver": "^5.1.0",
-    "shelljs": "^0.7.0",
-    "sinon": "^1.17.4",
-    "source-map-support": "^0.4.0",
-    "typescript": "^1.9.0-dev.20160519-1.0",
-    "winston": "^2.2.0"
+    "semver": "^5.1.0"
   }
 }
