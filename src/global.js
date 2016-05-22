@@ -59,6 +59,6 @@ Object.assign(global,{
 },require('./helpers'))
 
 
-process.on('uncaughtException', function (err) {
-	log.error(err.message,err);
-});
+// process.on('uncaughtException', function (err) {
+// 	log.error(err.message,err);
+// });

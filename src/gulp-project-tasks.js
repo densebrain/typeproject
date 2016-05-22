@@ -11,9 +11,9 @@ const SourceMapModes = {
 
 module.exports = {
 	SourceMapModes,
-	makeCoreTasks(rootPath, sourceMapMode = SourceMapModes.InlineSourceMap) {
+	makeCoreTasks(gulp,rootPath,projectDir,sourceMapMode = SourceMapModes.InlineSourceMap) {
 
-		const basePath = path.resolve(rootPath),
+		const basePath = projectDir,
 			distPath = path.resolve(basePath, 'dist'),
 			typingsPath = path.resolve(basePath, 'typings'),
 			srcPath = path.resolve(basePath, 'src'),
@@ -25,17 +25,17 @@ module.exports = {
 
 
 		// Do all the imports here incase some override of something
-		const
-			gulp = require('gulp'),
-			gutil = require('gulp-util'),
-			del = require('del'),
-			git = require('gulp-git'),
-			ts = require('gulp-typescript'),
-			glob = require('glob'),
-			merge = require('merge2'),
-			babel = require('gulp-babel'),
-			mocha = require('gulp-mocha'),
-			sourceMaps = require('gulp-sourcemaps')
+		// const
+		// 	gulp = require('gulp'),
+		// 	gutil = require('gulp-util'),
+		// 	del = require('del'),
+		// 	git = require('gulp-git'),
+		// 	ts = require('gulp-typescript'),
+		// 	glob = require('glob'),
+		// 	merge = require('merge2'),
+		// 	babel = require('gulp-babel'),
+		// 	mocha = require('gulp-mocha'),
+		// 	sourceMaps = require('gulp-sourcemaps')
 
 
 		/**
