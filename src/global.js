@@ -48,7 +48,7 @@ Object.assign(global,{
 	path,
 
 	typeProjectVersion: version,
-	
+
 	// Path to typeproject file
 	typeProjectConfigFile(rootDir) {
 		return path.resolve(rootDir,'.typeproject')
@@ -57,3 +57,8 @@ Object.assign(global,{
 	// Create a TSConfig Object
 	makeTsConfig: require('./make-tsconfig')
 },require('./helpers'))
+
+
+process.on('uncaughtException', function (err) {
+	log.error(err.message,err);
+});

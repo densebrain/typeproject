@@ -2,11 +2,10 @@
 require('shelljs/global')
 config.fatal = true
 
-const
-	path = require('path'),
-	fs = require('fs'),
-	inquirer = require('inquirer')
 
+
+const
+	inquirer = require('inquirer')
 
 const {
 	readJSONFileSync,
@@ -62,7 +61,8 @@ module.exports = function(projectName) {
 			},
 			dependencies: {},
 			devDependencies: {
-				"typeproject": typeProjectVersion
+				//"typeproject": typeProjectVersion
+				"typeproject": 'densebrain/typeproject'
 			}
 		}, null, 4)
 	}
@@ -139,7 +139,7 @@ module.exports = function(projectName) {
 		],baseDir)
 
 		cd(baseDir)
-		exec('npm install')
+		exec('npm --cache-min 99999999 install')
 
 
 	}
@@ -149,6 +149,9 @@ module.exports = function(projectName) {
 		.then((answers) => {
 			// Now create a new package with the answers
 			makeProject(answers)
+		})
+		.catch(err => {
+			log.error(err)
 		})
 
 

@@ -3,13 +3,14 @@ require('source-map-support/register')
 const path = require('path')
 const fs = require('fs')
 
-export const SourceMapModes = {
+const SourceMapModes = {
 	SourceMap: 1,
 	InlineSourceMap: 2
 }
 
 
 module.exports = {
+	SourceMapModes,
 	makeCoreTasks(rootPath, sourceMapMode = SourceMapModes.InlineSourceMap) {
 
 		const basePath = path.resolve(rootPath),

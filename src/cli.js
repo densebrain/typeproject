@@ -1,7 +1,5 @@
 require('./global')
 
-
-
 const
 	cmd = require('commander')
 
