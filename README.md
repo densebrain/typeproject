@@ -14,6 +14,20 @@ npm i -g typeproject
 tp create my-project
 ```
 
+
+### Gulp tasks
+
+All compiled assets goto `<dir>/dist`
+
+```
+compile
+compile-watch
+test
+tdd (compile-watch + test)
+
+update-project-deps (coming soon)
+```
+
 ### Start coding!!!
 
 the important parts of the tree structure
@@ -31,4 +45,7 @@ look like this:
 ./tslint.json
 ./package.json
 ./wallaby.js <-- we like it - up to you
+./.typeproject <-- our config file for future updates
 ```
+
+
