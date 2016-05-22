@@ -64,8 +64,8 @@ module.exports = function(projectName) {
 				"source-map-support": "^0.4.0"
 			},
 			devDependencies: {
-				//"typeproject": typeProjectVersion,
-				"typeproject": 'densebrain/typeproject',
+				"typeproject": typeProjectVersion,
+				//"typeproject": 'densebrain/typeproject',
 				"babel-core": "^6.9.0",
 				"babel-preset-es2015": "^6.9.0",
 				"babel-preset-stage-0": "^6.5.0",
@@ -153,10 +153,10 @@ module.exports = function(projectName) {
 
 		ShellString(`# ${name} Module (${name})\n\nReadme goes here`).to(`${baseDir}/README.md`)
 		ShellString(`/// <reference path="./browser.d.ts"/>`).to(`${baseDir}/typings/index.d.ts`)
-		
-		
-		
-		
+
+
+
+
 		// Create config files
 		ShellString(makeTypingsJson(name))
 			.to(`${baseDir}/typings.json`)
@@ -174,7 +174,7 @@ module.exports = function(projectName) {
 		`).to(`${baseDir}/gulpfile.babel.js`)
 
 
-		
+
 
 
 
