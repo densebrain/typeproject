@@ -20,29 +20,14 @@ module.exports = {
 			srcPaths = [
 				`${typingsPath}/browser.d.ts`,
 				`${typingsPath}/index.d.ts`,
-				`${srcPath}/src/**/*.ts`
+				`${srcPath}/**/*.ts`
 			]
-
-
-		// Do all the imports here incase some override of something
-		// const
-		// 	gulp = require('gulp'),
-		// 	gutil = require('gulp-util'),
-		// 	del = require('del'),
-		// 	git = require('gulp-git'),
-		// 	ts = require('gulp-typescript'),
-		// 	glob = require('glob'),
-		// 	merge = require('merge2'),
-		// 	babel = require('gulp-babel'),
-		// 	mocha = require('gulp-mocha'),
-		// 	sourceMaps = require('gulp-sourcemaps')
-
 
 		/**
 		 * Create compile task
 		 */
 		gulp.task('compile', [], () => {
-			const tsProject = ts.createProject('./tsconfig.json', {
+			const tsProject = ts.createProject(`${basePath}/tsconfig.json`, {
 				typescript: require('typescript')
 			})
 
