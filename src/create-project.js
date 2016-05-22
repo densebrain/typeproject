@@ -59,10 +59,35 @@ module.exports = function(projectName) {
 				test: "gulp test",
 				compile: "gulp compile"
 			},
-			dependencies: {},
+			dependencies: {
+				"reflect-metadata": "^0.1.3",
+				"source-map-support": "^0.4.0"
+			},
 			devDependencies: {
-				//"typeproject": typeProjectVersion
-				"typeproject": 'densebrain/typeproject'
+				//"typeproject": typeProjectVersion,
+				"typeproject": 'densebrain/typeproject',
+				"babel-core": "^6.9.0",
+				"babel-preset-es2015": "^6.9.0",
+				"babel-preset-stage-0": "^6.5.0",
+				"babel-register": "^6.9.0",
+				"chai": "^3.5.0",
+				"del": "^2.2.0",
+				"glob": "^7.0.3",
+				"gulp": "^3.9.1",
+				"gulp-babel": "^6.1.2",
+				"gulp-debug": "^2.1.2",
+				"gulp-git": "^1.7.1",
+				"gulp-mocha": "^2.2.0",
+				"gulp-sourcemaps": "^1.6.0",
+				"gulp-typescript": "^2.13.4",
+				"gulp-util": "^3.0.7",
+				"merge2": "^1.0.2",
+				"mocha": "^2.4.5",
+				"mocha-junit-reporter": "^1.11.1",
+				"run-sequence": "^1.2.0",
+				"semver": "^5.1.0",
+				"sinon": "^1.17.4",
+				"typescript": "^1.9.0-dev.20160519-1.0"
 			}
 		}, null, 4)
 	}
@@ -102,8 +127,19 @@ module.exports = function(projectName) {
 			throw new Error(`Package directory already exists ${baseDir}`)
 
 
-		mkdir('-p', `${baseDir}/src/test`)
-		mkdir('-p', `${baseDir}/typings`)
+		// Copy common bits
+		mkdir('-p', baseDir)
+		log.info('Copying common files')
+		cp('-rf',[
+			`${tpDir}/.idea`,
+			`${tpDir}/.babelrc`,
+			`${tpDir}/.eslintrc`,
+			`${tpDir}/.gitignore`,
+			`${tpDir}/wallaby.js`,
+			`${tpDir}/tslint.json`,
+			`${tpDir}/typings`
+		],baseDir)
+		cp('-rf',`${tpDir}/src-template`,`${baseDir}/src`)
 
 		// Update the projects.json
 		const projectConfig = {
@@ -115,31 +151,39 @@ module.exports = function(projectName) {
 		log.info(`Writing config to ${tpConfigFile}`)
 		writeJSONFileSync(tpConfigFile, projectConfig)
 
-		echo(`# ${name} Module (${name})\n\nReadme goes here`).to(`${baseDir}/README.md`)
-		echo(`/// <reference path="./browser.d.ts"/>`).to(`${baseDir}/typings/index.d.ts`)
-		echo(`// ${name}\n\nexport {\n\n}`).to(`${baseDir}/src/index.ts`)
-
+		ShellString(`# ${name} Module (${name})\n\nReadme goes here`).to(`${baseDir}/README.md`)
+		ShellString(`/// <reference path="./browser.d.ts"/>`).to(`${baseDir}/typings/index.d.ts`)
+		
+		
+		
+		
 		// Create config files
-		echo(makeTypingsJson(name)).to(`${baseDir}/typings.json`)
-		echo(makePackageJson(name,description)).to(`${baseDir}/package.json`)
-		echo(makeTsConfig(projectConfig,require(`${baseDir}/package.json`)))
+		ShellString(makeTypingsJson(name))
+			.to(`${baseDir}/typings.json`)
+		ShellString(makePackageJson(name,description))
+			.to(`${baseDir}/package.json`)
+		ShellString(makeTsConfig(projectConfig,require(`${baseDir}/package.json`)))
+			.to(`${baseDir}/tsconfig.json`)
 
 		// Now create the gulpfile
-		echo(`require('typeproject/gulpfile.babel')\n\nconst {gulp} = global\n\n//Add tasks, etc below`).to(`${baseDir}/gulpfile.babel.js`)
+		ShellString(`
+		require('typeproject/gulpfile.babel')
+		const gulp = require('gulp')
+		
+		//Add tasks, etc below
+		`).to(`${baseDir}/gulpfile.babel.js`)
 
 
-		// Copy all the other bits
-		log.info('Copying common files')
-		cp('-f',[
-			`${tpDir}/.babelrc`,
-			`${tpDir}/.eslintrc`,
-			`${tpDir}/.gitignore`,
-			`${tpDir}/wallaby.js`,
-			`${tpDir}/tslint.json`,
-		],baseDir)
+		
+
+
 
 		cd(baseDir)
-		exec('npm --cache-min 99999999 install')
+		mv(`${baseDir}/.idea/typeproject.iml`,`${baseDir}/.idea/${name}.iml`)
+		sed('-i','typeproject',name,`${baseDir}/.idea/modules.xml`)
+		rm(`${baseDir}/.idea/workspace.xml`)
+		exec('git init')
+		exec('npm install')
 
 
 	}
