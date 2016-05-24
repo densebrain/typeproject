@@ -36,10 +36,6 @@ function releaseTag(done) {
 	return gulp.src('.')
 		.pipe(git.add())
 		.pipe(git.commit(msg))
-		.on('error',err => {
-			log.error(`Failed to commit for release: ${err}`,err)
-			return done(err)
-		})
 		.on('end',err => {
 			if (err)
 				return done(err)
