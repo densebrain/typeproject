@@ -52,7 +52,7 @@ function releaseTag(done) {
 			return done(tagErr)
 		}
 
-		git.push('origin','master', {options: '--all'}, pushErr => {
+		git.push('origin','master', {options: '--tags'}, pushErr => {
 			if (pushErr)
 				return done(pushErr)
 
