@@ -3,7 +3,7 @@ require('./global')
 
 /**
  * Get package JSON object
- * 
+ *
  * @returns {*}
  */
 function getPkgJson() {
@@ -13,7 +13,7 @@ function getPkgJson() {
 /**
  * Increment the package
  * JSON version
- * 
+ *
  * @returns {*}
  */
 function bumpVersion(){
@@ -27,7 +27,7 @@ function bumpVersion(){
 /**
  * Prepare for release my bumping version
  * and committing all unchanged files
- * 
+ *
  * @returns {*}
  */
 function releasePrepare() {
@@ -39,7 +39,7 @@ function releasePrepare() {
 
 /**
  * Create release tag
- * 
+ *
  * @param done
  */
 function releaseTag(done) {
@@ -52,7 +52,7 @@ function releaseTag(done) {
 			return done(tagErr)
 		}
 
-		git.push('origin','master', pushErr => {
+		git.push('origin','master', {options: '--all'}, pushErr => {
 			if (pushErr)
 				return done(pushErr)
 
