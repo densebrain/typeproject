@@ -5,6 +5,7 @@ if (!global.gulp)
 	global.gulp = require('gulp')
 
 const
+	semver = require('semver'),
 	gutil = require('gulp-util'),
 	del = require('del'),
 	git = require('gulp-git'),
@@ -28,6 +29,7 @@ const
 log.info(`Project directory ${projectDir}`)
 
 Object.assign(global, {
+	semver,
 	gutil,
 	del,
 	git,

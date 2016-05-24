@@ -5,7 +5,10 @@ function readJSONFileSync(filename) {
 }
 
 function writeJSONFileSync(filename,json) {
-	fs.writeFileSync(filename,JSON.stringify(json,null,4))
+	if (typeof json !== 'string')
+		json = JSON.stringify(json,null,4)
+
+	fs.writeFileSync(filename,json)
 }
 
 module.exports = {

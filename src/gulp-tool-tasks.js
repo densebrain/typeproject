@@ -22,11 +22,9 @@ function tsConfigTask() {
 }
 
 function bumpVersion(){
-	const bump = require('gulp-bump')
-
-	return gulp.src(`${projectDir}/package.json`)
-		.pipe(bump({type:'patch'}))
-		.pipe(gulp.dest(projectDir))
+	const pkg = getPkgJson()
+	pkg.version = semver.inc(pkg.version,'patch')
+	writeJSONFileSync(`${projectDir}/package.json`,pkg)
 }
 
 
