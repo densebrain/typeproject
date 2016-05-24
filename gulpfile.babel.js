@@ -1,9 +1,10 @@
 require('source-map-support/register')
 require('./src/global')
 
+if (!global.gulp)
+	global.gulp = require('gulp')
 
 const
-	gulp = require('gulp'),
 	gutil = require('gulp-util'),
 	del = require('del'),
 	git = require('gulp-git'),
@@ -24,8 +25,9 @@ const
 		// otherwise we are in node_modules
 		path.resolve(__dirname,'../..')
 
+log.info(`Project directory ${projectDir}`)
+
 Object.assign(global, {
-	gulp,
 	gutil,
 	del,
 	git,
@@ -35,7 +37,7 @@ Object.assign(global, {
 	mocha,
 	sourceMaps
 })
-	
+
 
 log.info("Making tasks")
 makeCoreTasks(gulp,rootDir,projectDir)
