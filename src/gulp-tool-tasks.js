@@ -26,7 +26,7 @@ function bumpVersion(){
 
 	return gulp.src(`${projectDir}/package.json`)
 		.pipe(bump({type:'patch'}))
-		.pipe(gulp.dest(projectDir));
+		.pipe(gulp.dest(projectDir))
 }
 
 
@@ -35,11 +35,31 @@ function releaseTag() {
 	const pkgConfig = getPkgJson()
 	const msg = `[Release] Release Push ${pkgConfig.version}`
 
-	gulp.src('.')
+	return gulp.src('.')
 		.pipe(git.add())
 		.pipe(git.commit(msg))
-		.pipe(git.tag(`v${pkgConfig.version}`,msg))
-		.pipe(git.push('origin','master'))
+		.on('error',err => {
+			log.error(`Failed to commit for release: ${err}`,err)
+			throw err
+		})
+		.on('end',err => {
+			if (err)
+				throw err
+
+			git.tag(`v${pkgConfig.version}`,msg,tagErr => {
+				if (tagErr) {
+					log.error(`Failed to tag ${tagErr}`,tagErr)
+					throw tagErr
+				}
+
+				git.push('origin','master', pushErr => {
+					if (pushErr)
+						throw pushErr
+
+					log.info(`Push completed for ${pkgConfig.version}`)
+				})
+			})
+		})
 
 }
 
