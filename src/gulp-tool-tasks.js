@@ -29,7 +29,7 @@ function bumpVersion(){
 
 
 
-function releaseTag() {
+function releaseTag(done) {
 	const pkgConfig = getPkgJson()
 	const msg = `[Release] Release Push ${pkgConfig.version}`
 
@@ -38,23 +38,24 @@ function releaseTag() {
 		.pipe(git.commit(msg))
 		.on('error',err => {
 			log.error(`Failed to commit for release: ${err}`,err)
-			throw err
+			return done(err)
 		})
 		.on('end',err => {
 			if (err)
-				throw err
+				return done(err)
 
 			git.tag(`v${pkgConfig.version}`,msg,tagErr => {
 				if (tagErr) {
 					log.error(`Failed to tag ${tagErr}`,tagErr)
-					throw tagErr
+					return done(tagErr)
 				}
 
 				git.push('origin','master', pushErr => {
 					if (pushErr)
-						throw pushErr
+						return done(pushErr)
 
 					log.info(`Push completed for ${pkgConfig.version}`)
+					done()
 				})
 			})
 		})
