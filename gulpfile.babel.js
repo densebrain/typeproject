@@ -15,10 +15,13 @@ const
 	mocha = require('gulp-mocha'),
 	sourceMaps = require('gulp-sourcemaps'),
 	path = require('path'),
-	{makeCoreTasks} = require('./src/gulp-project-tasks'),
-	{makeToolTasks} = require('./src/gulp-tool-tasks'),
-	rootDir = path.resolve(__dirname),
-	projectDir = (rootDir === process.cwd()) ?
+	makeCoreTasks = require('./src/gulp-project-tasks'),
+	makeReleaseTasks = require('./src/gulp-release-tasks'),
+	makeToolTasks = require('./src/gulp-tool-tasks'),
+	rootDir = path.resolve(__dirname)
+	
+const isTypeProject = (rootDir === process.cwd()), 	
+	projectDir = isTypeProject ?
 
 		// If we are working on typeproject
 		rootDir :
@@ -42,6 +45,12 @@ Object.assign(global, {
 
 
 log.info("Making tasks")
-makeCoreTasks(gulp,rootDir,projectDir)
-makeToolTasks(gulp,rootDir,projectDir)
+
+if (!isTypeProject) {
+	makeCoreTasks(gulp, rootDir, projectDir)
+	makeToolTasks(gulp, rootDir, projectDir)
+}
+
+makeReleaseTasks(gulp,rootDir,projectDir)
+
 log.info("Made tasks")
