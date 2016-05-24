@@ -23,9 +23,9 @@ function tsConfigTask() {
 
 function bumpVersion(){
 	const bump = require('gulp-bump')
-	
+
 	return gulp.src(`${projectDir}/package.json`)
-		.pipe(bump({type:'minor'}))
+		.pipe(bump({type:'patch'}))
 		.pipe(gulp.dest(projectDir));
 }
 
