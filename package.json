@@ -1,6 +1,6 @@
 {
     "name": "typeproject",
-    "version": "1.0.13",
+    "version": "1.0.19",
     "description": "A tool for creating typescript projects/modules/packages with ease and without focusing on configuration",
     "main": "src/cli.js",
     "scripts": {

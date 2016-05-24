@@ -25,36 +25,35 @@ function bumpVersion(){
 	const pkg = getPkgJson()
 	pkg.version = semver.inc(pkg.version,'patch')
 	writeJSONFileSync(`${projectDir}/package.json`,pkg)
+	return pkg.version
 }
 
 
-
-function releaseTag(done) {
-	const pkgConfig = getPkgJson()
-	const msg = `[Release] Release Push ${pkgConfig.version}`
-
+function releasePrepare() {
+	const version = bumpVersion()
 	return gulp.src('.')
 		.pipe(git.add())
-		.pipe(git.commit(msg))
-		.on('end',err => {
-			if (err)
-				return done(err)
+		.pipe(git.commit(`[Release] Release Push ${version}`))
+}
 
-			git.tag(`v${pkgConfig.version}`,msg,tagErr => {
-				if (tagErr) {
-					log.error(`Failed to tag ${tagErr}`,tagErr)
-					return done(tagErr)
-				}
+function releaseTag(done) {
+	const {version} = getPkgJson()
+	const msg = `[Release] Release Push ${version}`
 
-				git.push('origin','master', pushErr => {
-					if (pushErr)
-						return done(pushErr)
+	git.tag(`v${version}`,msg,tagErr => {
+		if (tagErr) {
+			log.error(`Failed to tag ${tagErr}`,tagErr)
+			return done(tagErr)
+		}
 
-					log.info(`Push completed for ${pkgConfig.version}`)
-					done()
-				})
-			})
+		git.push('origin','master', pushErr => {
+			if (pushErr)
+				return done(pushErr)
+
+			log.info(`Push completed for ${version}`)
+			done()
 		})
+	})
 
 }
 
@@ -74,7 +73,8 @@ module.exports = {
 			log.info('All configuration completed')
 		})
 
-		gulp.task('bump-version', [],bumpVersion)
-		gulp.task('release-tag', ['bump-version'],releaseTag)
+
+		gulp.task('release-prepare', [],releasePrepare)
+		gulp.task('release-tag', ['release-prepare'],releaseTag)
 	}
 }
