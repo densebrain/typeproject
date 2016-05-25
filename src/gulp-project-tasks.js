@@ -8,8 +8,10 @@ const SourceMapModes = {
 	InlineSourceMap: 2
 }
 
+const DefaultSourceMapMode = SourceMapModes.SourceMap
 
-module.exports = function (gulp, rootPath, projectDir, sourceMapMode = SourceMapModes.InlineSourceMap) {
+module.exports = function (gulp, rootPath, projectDir, sourceMapMode = DefaultSourceMapMode) {
+	gutil.log('SourceMapMode = ' + sourceMapMode)
 
 	const basePath = projectDir,
 		distPath = path.resolve(basePath, 'dist'),
@@ -26,7 +28,8 @@ module.exports = function (gulp, rootPath, projectDir, sourceMapMode = SourceMap
 	 */
 	gulp.task('compile', [], () => {
 		const tsProject = ts.createProject(`${basePath}/tsconfig.json`, {
-			typescript: require('typescript')
+			typescript: require('typescript'),
+			sortOutput: true
 		})
 
 		const tsResult = gulp
@@ -43,7 +46,7 @@ module.exports = function (gulp, rootPath, projectDir, sourceMapMode = SourceMap
 		 */
 		const sourcemapOpts = {
 			sourceRoot: srcPath,
-			includeContent: false
+			//includeContent: false
 		}
 
 
@@ -63,7 +66,7 @@ module.exports = function (gulp, rootPath, projectDir, sourceMapMode = SourceMap
 		return merge([
 			tsResult.dts.pipe(gulp.dest(distPath)),
 			tsResult.js
-				.pipe(babel())
+				.pipe(babel(readJSONFileSync(`${basePath}/.babelrc`)))
 				.pipe(sourceMapHandler)
 				.pipe(gulp.dest(distPath))
 		])
