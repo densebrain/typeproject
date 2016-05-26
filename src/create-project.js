@@ -1,4 +1,15 @@
 
+/**
+ * @global log
+ * @global typeProjectVersion
+ * @global fs
+ * @global glob
+ * @global _
+ * @global typeProjectConfigFile
+ * @global path
+ * @external path
+ */
+
 require('shelljs/global')
 config.fatal = true
 
@@ -18,7 +29,8 @@ const {
  * all required assets, finally update
  * etc/projects.json
  *
- * @param name
+ * @param projectName
+ * @return {*}
  */
 module.exports = function(projectName) {
 	const questions = [
@@ -48,68 +60,16 @@ module.exports = function(projectName) {
 
 
 	function makePackageJson(name, description) {
-		return JSON.stringify({
-			name,
-			description: description || '',
-			version: '0.0.1',
-			main: "dist/index.js",
-			typings: "dist/index.d.ts",
-			scripts: {
-				prepublish: "gulp config",
-				test: "gulp test",
-				compile: "gulp compile"
-			},
-			dependencies: {
-				"reflect-metadata": "^0.1.3",
-				"source-map-support": "^0.4.0"
-			},
-			devDependencies: {
-				"typeproject": typeProjectVersion,
-				//"typeproject": 'densebrain/typeproject',
-				"babel-core": "^6.9.0",
-				"babel-preset-es2015": "^6.9.0",
-				"babel-preset-stage-0": "^6.5.0",
-				"babel-register": "^6.9.0",
-				"chai": "^3.5.0",
-				"del": "^2.2.0",
-				"glob": "^7.0.3",
-				"gulp": "^3.9.1",
-				"gulp-babel": "^6.1.2",
-				"gulp-debug": "^2.1.2",
-				"gulp-git": "^1.7.1",
-				"gulp-mocha": "^2.2.0",
-				"gulp-sourcemaps": "^1.6.0",
-				"gulp-typescript": "^2.13.4",
-				"gulp-util": "^3.0.7",
-				"merge2": "^1.0.2",
-				"mocha": "^2.4.5",
-				"mocha-junit-reporter": "^1.11.1",
-				"run-sequence": "^1.2.0",
-				"semver": "^5.1.0",
-				"sinon": "^1.17.4",
-				"typescript": "^1.9.0-dev.20160519-1.0"
-			}
-		}, null, 4)
+
+		//noinspection JSUnresolvedVariable
+		const pkg = require('./make-package-json')(name,description)
+		return JSON.stringify(pkg, null, 4)
 	}
 
 
 	function makeTypingsJson(name) {
-		return JSON.stringify({
-			name,
-			version: false,
-			dependencies: {},
-			ambientDependencies: {
-				"node": "registry:dt/node#6.0.0+20160514165920"
-			},
-			ambientDevDependencies: {
-				"chai": "registry:dt/chai#3.4.0+20160317120654",
-				"mocha": "registry:dt/mocha#2.2.5+20160317120654"
-			},
-			devDependencies: {
-				"chai": "registry:npm/chai#3.5.0+20160415060238",
-				"sinon": "registry:npm/sinon#1.16.0+20160427193336"
-			}
-		}, null, 4)
+		const typings = require('./make-typings-json')(name)
+		return JSON.stringify(typings, null, 4)
 	}
 
 
@@ -146,6 +106,7 @@ module.exports = function(projectName) {
 			name,type,description
 		}
 
+		//noinspection JSUnresolvedFunction
 		const tpConfigFile = typeProjectConfigFile(baseDir)
 
 		log.info(`Writing config to ${tpConfigFile}`)
@@ -154,24 +115,17 @@ module.exports = function(projectName) {
 		ShellString(`# ${name} Module (${name})\n\nReadme goes here`).to(`${baseDir}/README.md`)
 		ShellString(`/// <reference path="./browser.d.ts"/>`).to(`${baseDir}/typings/index.d.ts`)
 
-
-
-
 		// Create config files
 		ShellString(makeTypingsJson(name))
 			.to(`${baseDir}/typings.json`)
 		ShellString(makePackageJson(name,description))
 			.to(`${baseDir}/package.json`)
+		//noinspection JSUnresolvedFunction
 		ShellString(makeTsConfig(projectConfig,require(`${baseDir}/package.json`)))
 			.to(`${baseDir}/tsconfig.json`)
 
 		// Now create the gulpfile
-		ShellString(`
-		require('typeproject/gulpfile.babel')
-		const gulp = require('gulp')
-		
-		//Add tasks, etc below
-		`).to(`${baseDir}/gulpfile.babel.js`)
+		//ShellString().to(`${baseDir}/gulpfile.babel.js`)
 
 
 

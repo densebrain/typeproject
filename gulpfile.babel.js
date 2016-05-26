@@ -1,9 +1,11 @@
 require('source-map-support/register')
 require('./src/global')
 
+if (!global.gulp)
+	global.gulp = require('gulp')
 
 const
-	gulp = require('gulp'),
+	semver = require('semver'),
 	gutil = require('gulp-util'),
 	del = require('del'),
 	git = require('gulp-git'),
@@ -13,10 +15,13 @@ const
 	mocha = require('gulp-mocha'),
 	sourceMaps = require('gulp-sourcemaps'),
 	path = require('path'),
-	{makeCoreTasks} = require('./src/gulp-project-tasks'),
-	{makeToolTasks} = require('./src/gulp-tool-tasks'),
-	rootDir = path.resolve(__dirname),
-	projectDir = (rootDir === process.cwd()) ?
+	makeCoreTasks = require('./src/gulp-project-tasks'),
+	makeReleaseTasks = require('./src/gulp-release-tasks'),
+	makeToolTasks = require('./src/gulp-tool-tasks'),
+	rootDir = path.resolve(__dirname)
+	
+const isTypeProject = (rootDir === process.cwd()), 	
+	projectDir = isTypeProject ?
 
 		// If we are working on typeproject
 		rootDir :
@@ -24,8 +29,10 @@ const
 		// otherwise we are in node_modules
 		path.resolve(__dirname,'../..')
 
+log.info(`Project directory ${projectDir}`)
+
 Object.assign(global, {
-	gulp,
+	semver,
 	gutil,
 	del,
 	git,
@@ -35,9 +42,15 @@ Object.assign(global, {
 	mocha,
 	sourceMaps
 })
-	
+
 
 log.info("Making tasks")
-makeCoreTasks(gulp,rootDir,projectDir)
-makeToolTasks(gulp,rootDir,projectDir)
+
+if (!isTypeProject) {
+	makeCoreTasks(gulp, rootDir, projectDir)
+	makeToolTasks(gulp, rootDir, projectDir)
+}
+
+makeReleaseTasks(gulp,rootDir,projectDir)
+
 log.info("Made tasks")

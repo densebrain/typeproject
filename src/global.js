@@ -20,15 +20,15 @@ logger.cli()
 const
 	glob = require('glob'),
 	helpers = require('./helpers'),
-	fs = require('fs')
+	fs = require('fs'),
+	_ = require('lodash')
 
-
-Object.assign(global,{
+_.assign(global,{
 	log: logger,
 	glob,
 	fs,
 	path,
-
+	_,
 	typeProjectVersion: version,
 
 	// Path to typeproject file
@@ -37,7 +37,7 @@ Object.assign(global,{
 	},
 
 	// Create a TSConfig Object
-	makeTsConfig: require('./make-tsconfig')
+	makeTsConfig: require('./make-tsconfig-json')
 },require('./helpers'))
 
 

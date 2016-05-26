@@ -1,26 +1,21 @@
 require('./global')
 
 
-
+/**
+ * Get package JSON object
+ *
+ * @returns {*}
+ */
 function getPkgJson() {
 	return readJSONFileSync(`${projectDir}/package.json`)
 }
 
-function tsConfigTask() {
-
-	const tpConfigFile = typeProjectConfigFile(projectDir)
-
-	if (!fs.existsSync(tpConfigFile))
-		throw new Error(`${tpConfigFile} does not exist`)
-
-	const tpConfig = (tpConfigFile)
-	const pkgConfig = getPkgJson()
-	const tsConfig = makeTsConfig(tpConfig, pkgConfig)
-
-	writeJSONFileSync(`${projectDir}/tsconfig.json`, tsConfig)
-
-}
-
+/**
+ * Increment the package
+ * JSON version
+ *
+ * @returns {*}
+ */
 function bumpVersion(){
 	const pkg = getPkgJson()
 	pkg.version = semver.inc(pkg.version,'patch')
@@ -29,6 +24,12 @@ function bumpVersion(){
 }
 
 
+/**
+ * Prepare for release my bumping version
+ * and committing all unchanged files
+ *
+ * @returns {*}
+ */
 function releasePrepare() {
 	const version = bumpVersion()
 	return gulp.src('.')
@@ -36,6 +37,11 @@ function releasePrepare() {
 		.pipe(git.commit(`[Release] Release Push ${version}`))
 }
 
+/**
+ * Create release tag
+ *
+ * @param done
+ */
 function releaseTag(done) {
 	const {version} = getPkgJson()
 	const msg = `[Release] Release Push ${version}`
@@ -46,7 +52,7 @@ function releaseTag(done) {
 			return done(tagErr)
 		}
 
-		git.push('origin','master', pushErr => {
+		git.push('origin','master', {args: '--tags'}, pushErr => {
 			if (pushErr)
 				return done(pushErr)
 
@@ -57,20 +63,13 @@ function releaseTag(done) {
 
 }
 
-
-module.exports = function(gulp,rootDir,projectDir) {
-
+/**
+ * Export the creation functionality
+ * @type {{makeReleaseTasks: (function(*, *, *))}}
+ */
+module.exports = (gulp,rootDir,projectDir) => {
 	// Make the paths available
 	Object.assign(global,{rootDir,projectDir})
-
-	// Create individual config tasks
-	gulp.task('ts-config', [], tsConfigTask)
-
-	// Make macro task
-	gulp.task('config', ['ts-config'], () => {
-		log.info('All configuration completed')
-	})
-
 
 	gulp.task('release-prepare', [],releasePrepare)
 	gulp.task('release-tag', ['release-prepare'],releaseTag)
