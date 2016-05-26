@@ -23,6 +23,10 @@ module.exports = function (gulp, rootPath, projectDir, sourceMapMode = DefaultSo
 			`${srcPath}/**/*.ts`
 		]
 
+	gulp.task('clean',[],() => {
+		del(['.awcache','dist','target'])
+	})
+
 	/**
 	 * Create compile task
 	 */
