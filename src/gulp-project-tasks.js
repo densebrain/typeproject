@@ -11,9 +11,10 @@ const SourceMapModes = {
 const DefaultSourceMapMode = SourceMapModes.SourceMap
 
 module.exports = function (gulp, rootPath, projectDir, sourceMapMode = DefaultSourceMapMode) {
-	gutil.log('SourceMapMode = ' + sourceMapMode)
+	gutil.log('SourceMapMode = ' + sourceMapMode,'project dir',projectDir)
 
-	const basePath = projectDir,
+	const
+		basePath = projectDir,
 		distPath = path.resolve(basePath, 'dist'),
 		typingsPath = path.resolve(basePath, 'typings'),
 		srcPath = path.resolve(basePath, 'src'),

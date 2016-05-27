@@ -27,7 +27,7 @@ const isTypeProject = (rootDir === process.cwd()),
 		rootDir :
 
 		// otherwise we are in node_modules
-		path.resolve(__dirname,'../..')
+		process.cwd()//path.resolve(__dirname,'../..')
 
 log.info(`Project directory ${projectDir}`)
 
