@@ -19,8 +19,8 @@ const
 	makeReleaseTasks = require('./src/gulp-release-tasks'),
 	makeToolTasks = require('./src/gulp-tool-tasks'),
 	rootDir = path.resolve(__dirname)
-	
-const isTypeProject = (rootDir === process.cwd()), 	
+
+const isTypeProject = (rootDir === process.cwd()),
 	projectDir = isTypeProject ?
 
 		// If we are working on typeproject
