@@ -3,7 +3,7 @@ require('./global')
 
 
 function getPkgJson() {
-	return readJSONFileSync(`${projectDir}/package.json`)
+	return readJSONFile(`${projectDir}/package.json`)
 }
 
 function tsConfigTask() {
@@ -17,14 +17,14 @@ function tsConfigTask() {
 	const pkgConfig = getPkgJson()
 	const tsConfig = makeTsConfig(tpConfig, pkgConfig)
 
-	writeJSONFileSync(`${projectDir}/tsconfig.json`, tsConfig)
+	writeJSONFile(`${projectDir}/tsconfig.json`, tsConfig)
 
 }
 
 function bumpVersion(){
 	const pkg = getPkgJson()
 	pkg.version = semver.inc(pkg.version,'patch')
-	writeJSONFileSync(`${projectDir}/package.json`,pkg)
+	writeJSONFile(`${projectDir}/package.json`,pkg)
 	return pkg.version
 }
 
