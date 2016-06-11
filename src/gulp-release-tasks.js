@@ -7,7 +7,7 @@ require('./global')
  * @returns {*}
  */
 function getPkgJson() {
-	return readJSONFile(`${projectDir}/package.json`)
+	return readJSONFileSync(`${projectDir}/package.json`)
 }
 
 /**
@@ -19,7 +19,7 @@ function getPkgJson() {
 function bumpVersion(){
 	const pkg = getPkgJson()
 	pkg.version = semver.inc(pkg.version,'patch')
-	writeJSONFile(`${projectDir}/package.json`,pkg)
+	writeJSONFileSync(`${projectDir}/package.json`,pkg)
 	return pkg.version
 }
 

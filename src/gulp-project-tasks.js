@@ -71,7 +71,7 @@ module.exports = function (gulp, rootPath, projectDir, sourceMapMode = DefaultSo
 		return merge([
 			tsResult.dts.pipe(gulp.dest(distPath)),
 			tsResult.js
-				.pipe(babel(readJSONFile(`${basePath}/.babelrc`)))
+				.pipe(babel(readJSONFileSync(`${basePath}/.babelrc`)))
 				.pipe(sourceMapHandler)
 				.pipe(gulp.dest(distPath))
 		])
