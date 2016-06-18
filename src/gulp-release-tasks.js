@@ -35,6 +35,17 @@ function releasePrepare() {
 	return gulp.src('.')
 		.pipe(git.add())
 		.pipe(git.commit(`[Release] Release Push ${version}`))
+
+	//	`${releaseDir}/${projectName}-${nextMinorVersion}.tar.gz`
+	 // gulp.src(releaseFiles)
+		// .pipe(ghRelease({
+		// 	tag: `v${nextMinorVersion}`,
+		// 	name: `TypeStore Release ${nextMinorVersion}`,
+		// 	draft:false,
+		// 	prerelease:false,
+		// 	manifest:basePackageJson
+		// }))
+
 }
 
 /**
@@ -62,6 +73,26 @@ function releaseTag(done) {
 	})
 
 }
+
+
+/**
+ * Publish packages to NPM
+ *
+ * @param project
+ */
+function publish(project) {
+	if (releaseFiles.length < 1)
+		throw new Error('No releases were created')
+
+	const baseUrl = "https://github.com/densebrain/${{/releases/download"
+	const releaseUrl = `${baseUrl}/v${nextMinorVersion}/${project.name}-${nextMinorVersion}.tar.gz`
+
+	log.info(`Publishing ${project.name}@ ${nextMinorVersion} from ${releaseUrl}`)
+	if (exec(`npm publish ${releaseUrl}`).code !== 0) {
+		throw new Error(`Failed to publish ${project.name}`)
+	}
+}
+
 
 /**
  * Export the creation functionality
