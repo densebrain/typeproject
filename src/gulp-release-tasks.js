@@ -1,5 +1,10 @@
 require('./global')
 
+process.on("uncaughtException", function (reason,promise) {
+	console.error('Unhandled error',reason,promise)
+})
+
+
 const mkdirp = require('mkdirp')
 const ghRelease = require('gulp-github-release')
 const tar = require('gulp-tar')
@@ -59,10 +64,31 @@ function releaseCommit() {
 	gutil.log(`Using releases dir ${releasesDir}`)
 	mkdirp.sync(releasesDir)
 
+	// const doPush = () => git.push('origin', 'master',(pushErr) => {
+	// 	gutil.log('Pushing release bump')
+	//
+	// 	if (pushErr) throw pushErr
+	// })
+
+
 	return gulp.src('.')
 		.pipe(git.add())
 		.pipe(git.commit(`[Release] Release Push ${version}`))
+		// .on('finish',(err) => {
+		// 	if (!err)
+		// 		doPush()
+		//
+		// })
 
+
+
+
+}
+
+function releasePush() {
+	if (exec(`git push`).code !== 0) {
+		throw new Error('git push failed')
+	}
 }
 
 function releaseArchive() {
@@ -94,22 +120,24 @@ function releaseArchive() {
  * Create release tag
  */
 function release() {
+
 	const
 		pkgJson = getPkgJson(),
-		{version,name:projectName} = pkgJson,
-		msg = `[Release] Release Push ${version}`
+		{version, name:projectName} = pkgJson,
+		msg     = `[Release] Release Push ${version}`
 
-	const {releaseFile} = getReleaseFiles(projectName,version)
-
+	const {releaseFile} = getReleaseFiles(projectName, version)
+	gutil.log(`Releasing file ${releaseFile}`)
 	return gulp.src([releaseFile])
 		.pipe(ghRelease({
 			tag: `v${version}`,
 			name: `${projectName} Release ${version}`,
-			notes: msg,
-			draft:false,
-			prerelease:false,
-			manifest:pkgJson
+			draft: false,
+			prerelease: false,
+			manifest: pkgJson
 		}))
+
+
 	//
 	// const targetPackageJsonFile = `${targetDir}/package.json`
 	//
@@ -136,9 +164,9 @@ function release() {
 /**
  * Publish packages to NPM
  *
- * @param project
  */
 function publish() {
+
 	const
 		pkgJson = getPkgJson(),
 		{
@@ -152,13 +180,8 @@ function publish() {
 		msg = `[Release] Release Push ${version}`
 
 	assert(repoType === 'git' && gitRepoUrl.indexOf('github.com') > -1,'Repo config in package.json must be of type git and have a repo at github')
-	//const {releaseFile} = getReleaseFiles(projectName,version)
 
-
-	//const baseUrl = `https://github.com/densebrain/${}/releases/download`
-
-	//const baseUrl = gitRepoUrl.re
-	const baseUrl = 'https://github.com' + gitRepoUrl.split('github.com').pop().replace(/\.git$/,'') + '/releases/download'
+	const baseUrl = 'https://github.com' + gitRepoUrl.split('github.com').pop().replace(/\.git$/, '') + '/releases/download'
 	gutil.log(`Release base url ${baseUrl}`)
 
 	const releaseUrl = `${baseUrl}/v${version}/${projectName}-${version}.tar.gz`
@@ -166,7 +189,7 @@ function publish() {
 
 	gutil.log(`Publishing ${projectName}@ ${version} from ${releaseUrl}`)
 
-	const regExec = exec(`npm get registry`,{silent:true})
+	const regExec = exec(`npm get registry`, {silent: true})
 	if (regExec.code !== 0) {
 		throw new Error(`Failed to publish ${projectName}`)
 	}
@@ -175,14 +198,16 @@ function publish() {
 
 	try {
 		exec(`npm set registry https://registry.npmjs.org/`)
-		if (exec(`npm publish ${releaseUrl}`).code !== 0) {
+		// if (exec(`npm publish ${releaseUrl}`).code !== 0) {
+		// 	throw new Error(`Failed to publish ${projectName}`)
+		// }
+		if (exec(`npm publish`).code !== 0) {
 			throw new Error(`Failed to publish ${projectName}`)
 		}
 	} finally {
 		gutil.log(`Resetting to your local npm reg ${reg}`)
 		exec(`npm set registry ${reg}`)
 	}
-
 }
 
 
@@ -197,7 +222,8 @@ module.exports = (gulp,rootDir,projectDir) => {
 
 	gulp.task('release-archive',['test'],releaseArchive)
 	gulp.task('release-commit', ['release-archive'],releaseCommit)
-	gulp.task('release', ['release-commit'],release)
+	gulp.task('release-push', ['release-commit'],releasePush)
+	gulp.task('release', ['release-push'],release)
 	gulp.task('publish', ['release'],publish)
 
 }
