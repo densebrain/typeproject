@@ -49,6 +49,10 @@ log.info("Making tasks")
 if (!isTypeProject) {
 	makeCoreTasks(gulp, rootDir, projectDir)
 	makeToolTasks(gulp, rootDir, projectDir)
+} else {
+	gulp.task('test', [], () => {
+		gutil.log('TypeProject tests => none yet')
+	})
 }
 
 makeReleaseTasks(gulp,rootDir,projectDir)

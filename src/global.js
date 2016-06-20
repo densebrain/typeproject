@@ -1,3 +1,4 @@
+require('shelljs/global')
 const winston = require('winston')
 
 const

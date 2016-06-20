@@ -108,8 +108,6 @@ module.exports = function (gulp, rootPath, projectDir, sourceMapMode = DefaultSo
 	function makeMochaTask() {
 		return () => {
 
-
-
 			// Pick a reporter
 			const reporter = (process.env.CIRCLE) ?
 				'mocha-junit-reporter' :
