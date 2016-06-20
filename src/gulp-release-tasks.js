@@ -166,7 +166,7 @@ function publish() {
 
 	gutil.log(`Publishing ${projectName}@ ${version} from ${releaseUrl}`)
 
-	const regExec = exec(`npm get registry`)
+	const regExec = exec(`npm get registry`,{silent:true})
 	if (regExec.code !== 0) {
 		throw new Error(`Failed to publish ${projectName}`)
 	}
