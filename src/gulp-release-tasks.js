@@ -64,24 +64,9 @@ function releaseCommit() {
 	gutil.log(`Using releases dir ${releasesDir}`)
 	mkdirp.sync(releasesDir)
 
-	// const doPush = () => git.push('origin', 'master',(pushErr) => {
-	// 	gutil.log('Pushing release bump')
-	//
-	// 	if (pushErr) throw pushErr
-	// })
-
-
 	return gulp.src('.')
 		.pipe(git.add())
 		.pipe(git.commit(`[Release] Release Push ${version}`))
-		// .on('finish',(err) => {
-		// 	if (!err)
-		// 		doPush()
-		//
-		// })
-
-
-
 
 }
 
@@ -137,26 +122,6 @@ function release() {
 			manifest: pkgJson
 		}))
 
-
-	//
-	// const targetPackageJsonFile = `${targetDir}/package.json`
-	//
-	//
-	// git.tag(`v${version}`,msg,tagErr => {
-	// 	if (tagErr) {
-	// 		log.error(`Failed to tag ${tagErr}`,tagErr)
-	// 		return done(tagErr)
-	// 	}
-	//
-	// 	git.push('origin','master', {args: '--tags'}, pushErr => {
-	// 		if (pushErr)
-	// 			return done(pushErr)
-	//
-	// 		log.info(`Push completed for ${version}`)
-	//
-	// 		done()
-	// 	})
-	// })
 
 }
 
