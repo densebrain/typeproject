@@ -1,9 +1,8 @@
 require('./global')
 
-process.on("uncaughtException", function (reason,promise) {
-	console.error('Unhandled error',reason,promise)
+process.on("uncaughtException", function (err) {
+	console.error('Unhandled error',err)
 })
-
 
 const mkdirp = require('mkdirp')
 const ghRelease = require('gulp-github-release')
@@ -12,11 +11,15 @@ const gzip = require('gulp-gzip')
 const rename = require('gulp-rename')
 const assert = require('assert')
 
-
-
+/**
+ * Create all release variables
+ *
+ * @param projectName
+ * @param version
+ * @returns {{releaseTarFile: string, releaseFile: string}}
+ */
 function getReleaseFiles(projectName,version) {
 	const releasesDir = `${projectDir}/target/releases`
-	//gutil.log(`Using releases dir ${releasesDir}`)
 	mkdirp.sync(releasesDir)
 
 	const releaseTarFile = `${releasesDir}/${projectName}-${version}.tar`
@@ -181,9 +184,9 @@ function publish() {
  * @type {{makeReleaseTasks: (function(*, *, *))}}
  */
 module.exports = (gulp,rootDir,projectDir) => {
+
 	// Make the paths available
 	Object.assign(global,{rootDir,projectDir})
-
 
 	gulp.task('release-archive',['test'],releaseArchive)
 	gulp.task('release-commit', ['release-archive'],releaseCommit)
