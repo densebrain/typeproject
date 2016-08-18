@@ -113,18 +113,33 @@ module.exports = function (gulp, rootPath, projectDir, sourceMapMode = DefaultSo
 				'mocha-junit-reporter' :
 				'spec'
 
+			const requiredTestMods = [
+				"source-map-support/register"
+			]
+			
+			// Check if mod available and add
+			const addTestModIfExists = (modName) => {
+				gutil.log(`Checking for test mod ${modName}`)
+				try {
+					require.resolve(modName)
+				} catch (err) {
+					if (!fs.existsSync(modName)) {
+						gutil.log(`${modName} could not be resolved, skipping it`)
+						return
+					}
+				}
+				
+				requiredTestMods.push(modName)
+			}
+			
+			// Setup test environment
+			// Add files that optionally could exist
+			['./dist/test/test-setup.js','./dist/Globals.js'].forEach(addTestModIfExists)
+			
 			return gulp.src('dist/**/*.spec.js')
 				.pipe(mocha({
 					reporter,
-					require: [
-						"source-map-support/register",
-
-						// Setup test environment
-						'./dist/test/test-setup',
-
-						// Require the core package
-						'./dist/Globals'
-					]
+					require: requiredTestMods
 				}))
 
 		}
