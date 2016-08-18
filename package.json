@@ -4,7 +4,8 @@
   "description": "A tool for creating typescript projects/modules/packages with ease and without focusing on configuration",
   "main": "src/cli.js",
   "scripts": {
-    "test": "echo 'no tests - yet'"
+    "test": "echo 'no tests - yet'",
+    "publish-patch": "npm version patch && git push --tags"
   },
   "files": [
     ".gitignore",
