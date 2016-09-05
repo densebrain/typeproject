@@ -19,8 +19,8 @@ module.exports = function (gulp, rootPath, projectDir, sourceMapMode = DefaultSo
 		typingsPath = path.resolve(basePath, 'typings'),
 		srcPath = path.resolve(basePath, 'src'),
 		srcPaths = [
-			`${typingsPath}/browser.d.ts`,
-			`${typingsPath}/index.d.ts`,
+			`${basePath}/node_modules/@types/**/*.d.ts`,
+			`${typingsPath}/**/*.d.ts`,
 			`${srcPath}/**/*.ts`
 		]
 
