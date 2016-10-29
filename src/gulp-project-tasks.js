@@ -120,14 +120,14 @@ module.exports = function (gulp, rootPath, projectDir, sourceMapMode = DefaultSo
 			// Check if mod available and add
 			const addTestModIfExists = (modName) => {
 				gutil.log(`Checking for test mod ${modName}`)
-				try {
-					require.resolve(modName)
-				} catch (err) {
-					if (!fs.existsSync(modName)) {
-						gutil.log(`${modName} could not be resolved, skipping it`)
-						return
-					}
-				}
+				// try {
+				// 	//require.resolve(modName)
+				// } catch (err) {
+				// 	if (!fs.existsSync(modName)) {
+				// 		gutil.log(`${modName} could not be resolved, skipping it`)
+				// 		return
+				// 	}
+				// }
 				
 				requiredTestMods.push(modName)
 			}
